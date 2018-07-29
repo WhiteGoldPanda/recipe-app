@@ -3,13 +3,17 @@ import './App.css';
 import Form from "./components/Form";
 const API_KEY = "bcbdcc5a8dc564349cb8681bf31738ff"
 class App extends Component {
+  state = {
+    recipes: []
+  }
   getResipe = async (e) => {
     const recipeName = e.target.elements.recipeName.value;
     e.preventDefault();
     const api_call = await fetch(`https://cors-anywhere.herokuapp.com/http://food2fork.com/api/search?key=${API_KEY}&q=shredded%20chicken&count=10`);
     
     const data = await api_call.json();
-    console.log(data.recipes); 
+    this.setState({recipes: data.recipes});
+    console.log(this.state.recipes); 
   }
   render() {
     return (
@@ -18,6 +22,9 @@ class App extends Component {
           <h1 className="App-title">Recipe Search</h1>
         </header>
        <Form getResipe={this.getResipe} />
+       {this.state.recipes.map((recipe) =>{
+        return <p key={recipe.recipe_id}>{ recipe.title }</p>
+       })}
       </div>
     );
   }
